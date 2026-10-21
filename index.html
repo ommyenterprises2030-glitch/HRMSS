@@ -23,6 +23,10 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
+  <!-- HTML2Canvas & jsPDF kwa ajili ya Direct Download ya PDF bila kufungua Print Page -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
   <style>
     body {
       font-family: 'Plus Jakarta Sans', sans-serif;
@@ -33,20 +37,19 @@
     ::-webkit-scrollbar-thumb { background: rgba(100, 116, 139, 0.3); border-radius: 9999px; }
     .pb-safe { padding-bottom: env(safe-area-inset-bottom, 20px); }
 
-    /* Print styling kwa ajili ya Download PDF */
-    @media print {
-      body * { visibility: hidden; }
-      #printableReceipt, #printableReceipt * { visibility: visible; }
-      #printableReceipt {
-        position: absolute;
-        left: 0;
-        top: 0;
-        width: 100%;
-        display: block !important;
-        background: white !important;
-        color: black !important;
-        padding: 20px;
-      }
+    /* Custom Dropdown Styling */
+    select {
+      appearance: none;
+      -webkit-appearance: none;
+      background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%2394a3b8' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+      background-position: right 0.75rem center;
+      background-repeat: no-repeat;
+      background-size: 1.25em 1.25em;
+      padding-right: 2.5rem !important;
+    }
+
+    .dark select {
+      background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%2364748b' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
     }
   </style>
 </head>
@@ -77,6 +80,7 @@
       </div>
     </div>
 
+    <!-- Theme Switcher & Status -->
     <div class="flex items-center gap-2">
       <button onclick="toggleTheme()" aria-label="Toggle Theme" class="w-9 h-9 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-amber-400 flex items-center justify-center transition border border-slate-200 dark:border-slate-700">
         <i id="themeIcon" class="fa-solid fa-sun text-sm"></i>
@@ -194,7 +198,7 @@
             <p class="text-xs text-slate-500 dark:text-slate-400">Jaza maelezo binafsi kulingana na vitambulisho vyako.</p>
           </div>
 
-          <!-- Full Name -->
+          <!-- Full Name: Exact 3 Names & UPPERCASE -->
           <div>
             <div class="flex items-center justify-between mb-1">
               <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300">1. Full Name (Majina Matatu Pekee) *</label>
@@ -211,7 +215,7 @@
             </p>
           </div>
 
-          <!-- NIDA ya Mwombaji -->
+          <!-- NIDA ya Mwombaji: 8-5-5-2 -->
           <div>
             <div class="flex items-center justify-between mb-1">
               <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300">Namba ya NIDA ya Mwombaji *</label>
@@ -421,7 +425,7 @@
             </div>
           </div>
 
-          <!-- KAZI YA MDHAMINI (PAMOJA NA NYINGINEYO) -->
+          <!-- KAZI YA MDHAMINI (NYINGINEYO IKO JUU KABISA) -->
           <div class="relative">
             <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Kazi / Shughuli ya Mdhamini *</label>
             <input type="hidden" id="guarantorJobValue" value="">
@@ -435,7 +439,17 @@
             </button>
 
             <!-- Custom Job Dropdown Panel -->
-            <div id="jobPickerDropdown" class="hidden absolute left-0 right-0 mt-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-2xl shadow-2xl p-2 z-30 max-h-60 overflow-y-auto space-y-1">
+            <div id="jobPickerDropdown" class="hidden absolute left-0 right-0 mt-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-2xl shadow-2xl p-2 z-30 max-h-64 overflow-y-auto space-y-1">
+              <!-- CHAGUO LA NYINGINEYO JUU KABISA -->
+              <div onclick="selectJobOption('NYINGINEYO', 'fa-pen-to-square text-indigo-500')" class="p-2.5 rounded-xl bg-indigo-50/70 dark:bg-indigo-950/40 border border-indigo-200 dark:border-indigo-800/60 hover:bg-indigo-100 dark:hover:bg-indigo-900/50 flex items-center justify-between cursor-pointer transition">
+                <div class="flex items-center gap-2.5 text-xs font-black text-indigo-600 dark:text-indigo-400">
+                  <i class="fa-solid fa-pen-to-square text-sm"></i>
+                  <span>➕ Nyinginezo (Andika Kazi Mwenyewe)</span>
+                </div>
+                <span class="text-[9px] font-bold uppercase tracking-wider bg-indigo-500/20 text-indigo-600 dark:text-indigo-300 px-2 py-0.5 rounded-md">Weka Hapa</span>
+              </div>
+
+              <!-- ORODHA YA KAWAIDA -->
               <div onclick="selectJobOption('MKULIMA', 'fa-wheat-awn text-emerald-500')" class="p-2.5 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center justify-between cursor-pointer transition">
                 <div class="flex items-center gap-2.5 text-xs font-bold text-slate-800 dark:text-slate-200">
                   <i class="fa-solid fa-wheat-awn text-emerald-500 w-4"></i> Mkulima
@@ -484,24 +498,24 @@
                 </div>
                 <span class="text-[10px] text-slate-400 font-mono">Pensheni</span>
               </div>
-              
-              <!-- CHAGUO LA NYINGINEYO -->
-              <div onclick="selectJobOption('NYINGINEYO', 'fa-pen-clip text-indigo-500')" class="p-2.5 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center justify-between cursor-pointer transition border-t border-slate-100 dark:border-slate-800">
-                <div class="flex items-center gap-2.5 text-xs font-bold text-indigo-500">
-                  <i class="fa-solid fa-pen-clip w-4"></i> Nyinginezo (Andika Mwenyewe)...
-                </div>
-                <i class="fa-solid fa-arrow-right text-[10px] text-indigo-400"></i>
-              </div>
             </div>
 
-            <!-- Custom Job Field (Inatokea tu akichagua NYINGINEYO) -->
-            <div id="customJobContainer" class="hidden mt-2">
-              <label class="block text-[11px] font-semibold text-indigo-500 mb-1">Taja Kazi/Shughuli Yake Hapa *</label>
-              <input type="text" 
-                     id="guarantorJobCustom" 
-                     oninput="this.value = this.value.toUpperCase()" 
-                     placeholder="ANDIKA KAZI YAKE KWA HERUFI KUBWA" 
-                     class="uppercase w-full bg-slate-50 dark:bg-slate-800 border border-indigo-400 dark:border-indigo-600 text-slate-900 dark:text-white font-semibold rounded-xl px-3.5 py-2 text-xs sm:text-sm focus:outline-none focus:border-indigo-500 shadow-sm">
+            <!-- Custom Job Field -->
+            <div id="customJobContainer" class="hidden mt-2 p-3 rounded-2xl bg-indigo-50/50 dark:bg-indigo-950/20 border border-indigo-200 dark:border-indigo-800/50">
+              <div class="flex items-center justify-between mb-1">
+                <label class="block text-[11px] font-bold text-indigo-600 dark:text-indigo-400">Andika Kazi ya Mdhamini Hapa *</label>
+                <span class="text-[10px] text-indigo-400 font-bold uppercase">Herufi Kubwa</span>
+              </div>
+              <div class="relative">
+                <input type="text" 
+                       id="guarantorJobCustom" 
+                       oninput="this.value = this.value.toUpperCase()" 
+                       placeholder="MF. MWALIMU, MUUZA DAWA, MCHINJAJI N.K." 
+                       class="uppercase w-full bg-white dark:bg-slate-800 border border-indigo-300 dark:border-indigo-700 text-slate-900 dark:text-white font-semibold rounded-xl px-3.5 py-2.5 text-xs sm:text-sm focus:outline-none focus:border-indigo-500 shadow-sm">
+                <button type="button" onclick="cancelCustomJob()" class="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-white text-xs px-2 py-1">
+                  <i class="fa-solid fa-rotate-left mr-1"></i> Futa
+                </button>
+              </div>
             </div>
           </div>
 
@@ -616,8 +630,8 @@
         <p class="text-xs text-slate-500 dark:text-slate-400 mt-1 max-w-xs leading-relaxed">Taarifa zako zimepokelewa kwenye mfumo. Unaweza kupakua nakala ya fomu yako sasa kama uthibitisho.</p>
         
         <div class="w-full max-w-xs space-y-2 mt-5">
-          <!-- Kitufe cha Kupakua Fomu (Download / Print PDF) -->
-          <button onclick="downloadApplicationForm()" class="w-full py-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-extrabold text-xs rounded-xl shadow-lg shadow-blue-500/25 active:scale-95 transition flex items-center justify-center gap-2">
+          <!-- Kitufe cha Kupakua Fomu Moja kwa Moja kama PDF -->
+          <button onclick="downloadApplicationForm()" class="w-full py-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-extrabold text-xs rounded-xl shadow-lg shadow-blue-500/25 active:scale-95 transition flex items-center justify-center gap-2 cursor-pointer">
             <i class="fa-solid fa-file-pdf text-sm"></i>
             <span>Pakua Fomu / Risiti Yako (PDF)</span>
           </button>
@@ -645,27 +659,27 @@
     </div>
   </footer>
 
-  <!-- ==================== PRINTABLE APPLICATION RECEIPT (HIDDEN SCREEN, VISIBLE ON PRINT) ==================== -->
-  <div id="printableReceipt" class="hidden">
-    <div style="border: 2px solid #000; padding: 25px; font-family: sans-serif; max-width: 700px; margin: auto;">
+  <!-- ==================== TEMPLATE YA PDF (HIDDEN ILI IJIPAKUE BILA PRINT DIALOG) ==================== -->
+  <div id="printableReceipt" class="hidden" style="background:#fff; color:#000;">
+    <div style="border: 2px solid #000; padding: 25px; font-family: sans-serif; max-width: 700px; margin: auto; background:#fff;">
       <div style="text-align: center; border-bottom: 2px solid #000; padding-bottom: 15px; margin-bottom: 20px;">
         <h2 style="margin: 0; font-size: 20px; text-transform: uppercase;">HR & FLEET MANAGEMENT SYSTEM</h2>
-        <p style="margin: 5px 0 0; font-size: 13px;">FOMU YA USAJILI NA MAOMBI YA CHOMBO</p>
-        <p style="margin: 5px 0 0; font-size: 11px; font-weight: bold;" id="printRefNo">REF NO: HR-2026-0000</p>
+        <p style="margin: 5px 0 0; font-size: 13px; font-weight: bold;">FOMU YA USAJILI NA MAOMBI YA CHOMBO</p>
+        <p style="margin: 5px 0 0; font-size: 11px; font-family: monospace;" id="printRefNo">REF NO: HR-2026-0000</p>
       </div>
 
       <table style="width: 100%; border-collapse: collapse; font-size: 12px; margin-bottom: 15px;">
         <tr style="background: #eee;"><th colspan="2" style="padding: 6px; text-align: left; border: 1px solid #000;">1. KITENGO NA CHOMBO KILICHOOMBWA</th></tr>
         <tr><td style="padding: 6px; border: 1px solid #000; width: 40%;">Aina ya Biashara:</td><td id="pBiz" style="padding: 6px; border: 1px solid #000; font-weight: bold;">-</td></tr>
         <tr><td style="padding: 6px; border: 1px solid #000;">Model ya Chombo:</td><td id="pModel" style="padding: 6px; border: 1px solid #000; font-weight: bold;">-</td></tr>
-        <tr><td style="padding: 6px; border: 1px solid #000;">Namba ya Usajili (Plate):</td><td id="pPlate" style="padding: 6px; border: 1px solid #000; font-weight: bold;">-</td></tr>
+        <tr><td style="padding: 6px; border: 1px solid #000;">Namba ya Usajili (Plate):</td><td id="pPlate" style="padding: 6px; border: 1px solid #000; font-weight: bold; font-family: monospace;">-</td></tr>
       </table>
 
       <table style="width: 100%; border-collapse: collapse; font-size: 12px; margin-bottom: 15px;">
         <tr style="background: #eee;"><th colspan="2" style="padding: 6px; text-align: left; border: 1px solid #000;">2. TAARIFA ZA MWOMBAJI</th></tr>
         <tr><td style="padding: 6px; border: 1px solid #000; width: 40%;">Jina Kamili:</td><td id="pName" style="padding: 6px; border: 1px solid #000; font-weight: bold;">-</td></tr>
         <tr><td style="padding: 6px; border: 1px solid #000;">Namba ya NIDA:</td><td id="pNida" style="padding: 6px; border: 1px solid #000; font-family: monospace;">-</td></tr>
-        <tr><td style="padding: 6px; border: 1px solid #000;">Namba za Simu:</td><td id="pPhones" style="padding: 6px; border: 1px solid #000;">-</td></tr>
+        <tr><td style="padding: 6px; border: 1px solid #000;">Namba za Simu:</td><td id="pPhones" style="padding: 6px; border: 1px solid #000; font-family: monospace;">-</td></tr>
         <tr><td style="padding: 6px; border: 1px solid #000;">Tarehe ya Kuzaliwa / Umri / Jinsia:</td><td id="pDobSex" style="padding: 6px; border: 1px solid #000;">-</td></tr>
         <tr><td style="padding: 6px; border: 1px solid #000;">Makazi (Mkoa, Wilaya, Kata, Mtaa):</td><td id="pAddress" style="padding: 6px; border: 1px solid #000;">-</td></tr>
       </table>
@@ -691,6 +705,7 @@
   </div>
 
   <script>
+    // URL YA GOOGLE APPS SCRIPT
     const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwUT0_HSdNfl-NoM0BvvAR-E321DfVqJDW1DFHbNeHgjotjyjReR7nccvlFJf9uAPNxbw/exec";
 
     let currentStep = 1;
@@ -702,7 +717,6 @@
       fetchFleetFromSheet();
       updateNavButtons();
 
-      // Funga dropdown ukibonyeza popote nje
       document.addEventListener('click', (e) => {
         const jobTrigger = document.getElementById('btnSelectJobTrigger');
         const jobDropdown = document.getElementById('jobPickerDropdown');
@@ -720,7 +734,6 @@
       });
     });
 
-    // Toast
     function showToast(message, type = "success", title = "") {
       const toast = document.getElementById("toastNotification");
       const iconWrap = document.getElementById("toastIconWrap");
@@ -752,7 +765,6 @@
       }, 3500);
     }
 
-    // Theme Switcher
     function initTheme() {
       const savedTheme = localStorage.getItem('theme');
       applyTheme(savedTheme ? savedTheme === 'dark' : true);
@@ -776,7 +788,6 @@
       }
     }
 
-    // Jinsia Picker
     function selectSex(val) {
       document.getElementById('sex').value = val;
       const btnMe = document.getElementById('btnSexMe');
@@ -791,7 +802,6 @@
       }
     }
 
-    // Uhusiano Picker
     function toggleRelationPicker() {
       const dropdown = document.getElementById('relationPickerDropdown');
       const chevron = document.getElementById('relationPickerChevron');
@@ -811,7 +821,6 @@
       toggleRelationPicker();
     }
 
-    // Kazi Picker
     function toggleJobPicker() {
       const dropdown = document.getElementById('jobPickerDropdown');
       const chevron = document.getElementById('jobPickerChevron');
@@ -826,10 +835,10 @@
       const customInput = document.getElementById('guarantorJobCustom');
 
       if (val === 'NYINGINEYO') {
-        label.innerHTML = `<span class="text-indigo-500 font-bold"><i class="fa-solid fa-pen-clip mr-1.5"></i> Nyinginezo (Andika Mwenyewe)</span>`;
+        label.innerHTML = `<span class="text-indigo-600 dark:text-indigo-400 font-bold"><i class="fa-solid fa-pen-to-square mr-1.5"></i> Nyinginezo (Weka Hapa Chini)</span>`;
         customBox.classList.remove('hidden');
         customInput.setAttribute('required', 'required');
-        customInput.focus();
+        setTimeout(() => customInput.focus(), 150);
       } else {
         label.innerHTML = `<span class="text-slate-900 dark:text-white font-bold"><i class="fa-solid ${iconClass} mr-1.5"></i> ${val}</span>`;
         customBox.classList.add('hidden');
@@ -839,7 +848,13 @@
       toggleJobPicker();
     }
 
-    // NIDA Formatter (8-5-5-2)
+    function cancelCustomJob() {
+      document.getElementById('guarantorJobValue').value = '';
+      document.getElementById('guarantorJobCustom').value = '';
+      document.getElementById('customJobContainer').classList.add('hidden');
+      document.getElementById('selectedJobLabel').innerHTML = '<span class="text-slate-400">Gusa hapa kuchagua shughuli/kazi...</span>';
+    }
+
     function handleNidaInput(input, errorId) {
       let raw = input.value.replace(/[^0-9]/g, '');
       if (raw.length > 20) raw = raw.substring(0, 20);
@@ -871,7 +886,6 @@
       }
     }
 
-    // Name input
     function handleNameInput(input, errorId) {
       input.value = input.value.toUpperCase();
       validateThreeNames(input.value, errorId);
@@ -895,7 +909,6 @@
       }
     }
 
-    // Title Case
     function formatTitleCase(input) {
       const cursorPos = input.selectionStart;
       const original = input.value;
@@ -905,7 +918,6 @@
       input.setSelectionRange(cursorPos, cursorPos);
     }
 
-    // Phone Validation
     function validatePhone(phone) {
       const regexTZ = /^(0[67][0-9]{8})$/;
       return regexTZ.test(phone.trim());
@@ -927,7 +939,6 @@
       }
     }
 
-    // Fetch Fleet
     async function fetchFleetFromSheet() {
       try {
         const response = await fetch(`${GOOGLE_SCRIPT_URL}?action=getFleet`);
@@ -942,7 +953,6 @@
       }
     }
 
-    // Populate Review Data kabla ya kutuma
     function populateReviewData() {
       const bizType = document.querySelector('input[name="businessType"]:checked').value;
       const jobVal = document.getElementById("guarantorJobValue").value;
@@ -958,7 +968,6 @@
       document.getElementById("reviewGuarantorJob").innerText = finalJob || "-";
     }
 
-    // Checkbox Ready State
     function toggleSubmitReady() {
       const isChecked = document.getElementById("confirmCheckbox").checked;
       const btnNext = document.getElementById("btnAppNext");
@@ -973,7 +982,6 @@
       }
     }
 
-    // Stepper Navigation
     function goToStep(step) {
       const businessType = document.querySelector('input[name="businessType"]:checked').value;
       
@@ -1332,17 +1340,20 @@
     }
 
     // ==========================================
-    // DOWNLOAD YOUR FORM (PRINT/PDF GENERATOR)
+    // DIRECT PDF DOWNLOAD (BILA KUFUNGUA PRINT WINDOW)
     // ==========================================
-    function downloadApplicationForm() {
+    async function downloadApplicationForm() {
       if (!submittedDataReceipt) {
         showToast("Hakuna taarifa za fomu zilizopatikana.", "error");
         return;
       }
 
+      showToast("Inatengeneza faili lako la PDF, tafadhali subiri...", "warning", "Inapakua");
+
       const p = submittedDataReceipt;
       const refNo = "HR-" + Date.now().toString().slice(-6);
 
+      // Jaza data kwenye template ya risiti
       document.getElementById("printRefNo").innerText = "REF NO: " + refNo + " | TAREHE: " + new Date().toLocaleDateString('sw-TZ');
       document.getElementById("pBiz").innerText = p.businessType;
       document.getElementById("pModel").innerText = p.vehicleModel || "N/A";
@@ -1360,8 +1371,50 @@
       document.getElementById("pGJob").innerText = p.guarantorJob;
       document.getElementById("pGAddress").innerText = p.guarantorRegion + ", " + p.guarantorDistrict + ", Kata: " + p.guarantorWard + ", Mtaa: " + p.guarantorStreet;
 
-      // Fungua dirisha la kuchapa (Save as PDF)
-      window.print();
+      // Fanya printable container iweze kusomwa nje ya skrini na html2canvas
+      const element = document.getElementById("printableReceipt");
+      element.classList.remove("hidden");
+      element.style.position = "fixed";
+      element.style.left = "-9999px";
+      element.style.top = "0";
+      element.style.display = "block";
+      element.style.width = "750px";
+      element.style.background = "#ffffff";
+
+      try {
+        const { jsPDF } = window.jspdf;
+
+        const canvas = await html2canvas(element, {
+          scale: 2,
+          useCORS: true,
+          backgroundColor: "#ffffff"
+        });
+
+        const imgData = canvas.toDataURL("image/png");
+        const pdf = new jsPDF("p", "mm", "a4");
+
+        const imgWidth = 190;
+        const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+        pdf.addImage(imgData, "PNG", 10, 10, imgWidth, imgHeight);
+
+        // Amri ya Direct Download kwenye browser
+        const cleanName = p.fullName.replace(/\s+/g, "_");
+        const fileName = `Fomu_Usajili_${cleanName}_${refNo}.pdf`;
+        
+        pdf.save(fileName);
+
+        showToast("Fomu yako imepakuliwa kikamilifu kwenye kifaa chako!", "success", "Imepakuliwa");
+      } catch (error) {
+        console.error("PDF generation failed:", error);
+        showToast("Hitilafu wakati wa kutengeneza PDF. Jaribu tena.", "error");
+      } finally {
+        element.classList.add("hidden");
+        element.style.position = "";
+        element.style.left = "";
+        element.style.top = "";
+        element.style.display = "none";
+      }
     }
   </script>
 </body>
