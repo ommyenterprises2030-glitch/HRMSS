@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>HR Management - Usajili wa Waendeshaji</title>
 
-  <!-- Mobile Meta Tags -->
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -33,9 +32,37 @@
     ::-webkit-scrollbar { width: 4px; height: 4px; }
     ::-webkit-scrollbar-thumb { background: rgba(100, 116, 139, 0.3); border-radius: 9999px; }
     .pb-safe { padding-bottom: env(safe-area-inset-bottom, 20px); }
+
+    /* Custom Dropdown Styling */
+    select {
+      appearance: none;
+      -webkit-appearance: none;
+      background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%2394a3b8' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+      background-position: right 0.75rem center;
+      background-repeat: no-repeat;
+      background-size: 1.25em 1.25em;
+      padding-right: 2.5rem !important;
+    }
+
+    .dark select {
+      background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%2364748b' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+    }
   </style>
 </head>
 <body class="bg-slate-100 text-slate-800 dark:bg-[#090d16] dark:text-slate-100 min-h-screen flex flex-col transition-colors duration-200 antialiased select-none sm:select-auto">
+
+  <!-- ==================== MODERN TOAST NOTIFICATION ==================== -->
+  <div id="toastNotification" class="fixed top-5 left-1/2 -translate-x-1/2 z-50 transform -translate-y-20 opacity-0 pointer-events-none transition-all duration-300 ease-out max-w-sm w-[90%] sm:w-full">
+    <div id="toastCard" class="flex items-center gap-3 p-4 rounded-2xl border shadow-2xl backdrop-blur-md bg-white/95 dark:bg-slate-900/95 border-slate-200 dark:border-slate-800">
+      <div id="toastIconWrap" class="w-9 h-9 rounded-xl flex items-center justify-center text-sm shrink-0">
+        <i id="toastIcon" class="fa-solid fa-circle-check"></i>
+      </div>
+      <div class="flex-1 min-w-0">
+        <p id="toastTitle" class="text-xs font-black text-slate-900 dark:text-white leading-none">Taarifa</p>
+        <p id="toastMessage" class="text-[11px] text-slate-500 dark:text-slate-400 mt-1 truncate"></p>
+      </div>
+    </div>
+  </div>
 
   <!-- Mobile Header -->
   <header class="sticky top-0 z-40 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border-b border-slate-200 dark:border-slate-800/80 px-4 h-14 sm:h-16 flex items-center justify-between transition-colors">
@@ -84,7 +111,7 @@
         </div>
         <div class="relative z-10 flex flex-col items-center">
           <div id="badgeStep4" class="w-8 h-8 rounded-full bg-white dark:bg-slate-900 border-2 border-slate-300 dark:border-slate-700 text-slate-400 font-bold text-xs flex items-center justify-center shadow">4</div>
-          <span class="text-[10px] font-medium text-slate-500 dark:text-slate-400 mt-1">Nyaraka</span>
+          <span class="text-[10px] font-medium text-slate-500 dark:text-slate-400 mt-1">Uhakiki</span>
         </div>
       </div>
     </div>
@@ -130,7 +157,6 @@
             </label>
           </div>
 
-          <!-- Available Fleet Cards -->
           <div id="fleetPickerSection" class="pt-3 border-t border-slate-100 dark:border-slate-800 space-y-3">
             <div class="flex items-center justify-between">
               <div>
@@ -168,11 +194,11 @@
             <p class="text-xs text-slate-500 dark:text-slate-400">Jaza maelezo binafsi kulingana na vitambulisho vyako.</p>
           </div>
 
-          <!-- Full Name: Exact 3 Names & UPPERCASE -->
+          <!-- Full Name -->
           <div>
             <div class="flex items-center justify-between mb-1">
               <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300">1. Full Name (Majina Matatu Pekee) *</label>
-              <span class="text-[10px] text-slate-400">HERUFI KUBWA</span>
+              <span class="text-[10px] text-slate-400 font-bold">HERUFI KUBWA</span>
             </div>
             <input type="text" 
                    id="fullName" 
@@ -181,7 +207,25 @@
                    placeholder="MF. KASSIM OMARY BAKARI" 
                    class="uppercase tracking-wide w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white font-semibold rounded-xl px-3.5 py-2.5 text-xs sm:text-sm focus:outline-none focus:border-blue-600 transition">
             <p id="nameError" class="text-[11px] text-rose-500 mt-1 hidden font-medium">
-              Tafadhali weka majina matatu tu (Kwanza, Kati, Ukoo). Yasipungue wala kuzidi.
+              Weka majina matatu tu (Kwanza, Kati, Ukoo) kwa herufi kubwa.
+            </p>
+          </div>
+
+          <!-- NIDA ya Mwombaji -->
+          <div>
+            <div class="flex items-center justify-between mb-1">
+              <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300">Namba ya NIDA ya Mwombaji *</label>
+              <span class="text-[10px] text-slate-400 font-mono">Tarakimu 20</span>
+            </div>
+            <input type="text" 
+                   id="applicantNida" 
+                   required 
+                   maxlength="23"
+                   oninput="handleNidaInput(this, 'applicantNidaError')"
+                   placeholder="19XXXXXXXX-XXXXX-XXXXX-XX" 
+                   class="font-mono tracking-wider w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white font-bold rounded-xl px-3.5 py-2.5 text-xs sm:text-sm focus:outline-none focus:border-blue-600 transition">
+            <p id="applicantNidaError" class="text-[11px] text-rose-500 mt-1 hidden font-medium">
+              Namba ya NIDA lazima ifuate muundo: 19780914-23124-00001-24.
             </p>
           </div>
 
@@ -197,7 +241,7 @@
                      placeholder="07XXXXXXXX au 06XXXXXXXX" 
                      class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white rounded-xl px-3.5 py-2.5 text-xs sm:text-sm font-mono focus:outline-none focus:border-blue-600 transition">
               <p id="phonePrimaryError" class="text-[11px] text-rose-500 mt-1 hidden font-medium">
-                Namba ianze na 06 au 07 na iwe na tarakimu 10 kamili.
+                Ianze na 06 au 07 na iwe na tarakimu 10 kamili.
               </p>
             </div>
 
@@ -215,63 +259,48 @@
             </div>
           </div>
 
-          <!-- Age, DOB, Sex -->
-          <div class="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
-            <div class="col-span-2 sm:col-span-1">
-              <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">4. Date of Birth *</label>
+          <!-- Age, DOB & Sex -->
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+            <div>
+              <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Date of Birth *</label>
               <input type="date" id="dob" required onchange="calculateAge()" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white rounded-xl px-3 py-2 text-xs sm:text-sm focus:outline-none focus:border-blue-600">
             </div>
             <div>
-              <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">2. Age (Umri)</label>
+              <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Age (Umri)</label>
               <input type="number" id="age" readonly placeholder="Auto" class="w-full bg-slate-100 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 text-slate-500 rounded-xl px-3 py-2 text-xs sm:text-sm cursor-not-allowed">
             </div>
+
             <div>
-              <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">3. Sex (Jinsia) *</label>
-              <select id="sex" required class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white rounded-xl px-3 py-2 text-xs sm:text-sm focus:outline-none focus:border-blue-600">
-                <option value="">Chagua</option>
-                <option value="Me">Mwanaume</option>
-                <option value="Ke">Mwanamke</option>
-              </select>
+              <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Jinsia (Sex) *</label>
+              <input type="hidden" id="sex" value="">
+              <div class="grid grid-cols-2 gap-1.5 p-1 bg-slate-100 dark:bg-slate-800/80 rounded-xl border border-slate-200 dark:border-slate-700">
+                <button type="button" onclick="selectSex('Me')" id="btnSexMe" class="py-1.5 rounded-lg text-xs font-bold transition flex items-center justify-center gap-1.5 text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white">
+                  <i class="fa-solid fa-mars text-blue-500 text-xs"></i> Me
+                </button>
+                <button type="button" onclick="selectSex('Ke')" id="btnSexKe" class="py-1.5 rounded-lg text-xs font-bold transition flex items-center justify-center gap-1.5 text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white">
+                  <i class="fa-solid fa-venus text-rose-500 text-xs"></i> Ke
+                </button>
+              </div>
             </div>
           </div>
 
-          <!-- Address: Capitalize Each Word (Title Case) -->
+          <!-- Makazi ya Mwombaji -->
           <div class="grid grid-cols-2 gap-2.5 pt-1">
             <div>
-              <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">5. Region (Mkoa) *</label>
-              <input type="text" 
-                     id="region" 
-                     required 
-                     oninput="formatTitleCase(this)"
-                     placeholder="mf. Kagera" 
-                     class="capitalize w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white rounded-xl px-3.5 py-2 text-xs sm:text-sm focus:outline-none focus:border-blue-600">
+              <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Mkoa wa Mwombaji *</label>
+              <input type="text" id="region" required oninput="formatTitleCase(this)" placeholder="mf. Kagera" class="capitalize w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white rounded-xl px-3.5 py-2 text-xs sm:text-sm focus:outline-none focus:border-blue-600">
             </div>
             <div>
-              <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">6. District (Wilaya) *</label>
-              <input type="text" 
-                     id="district" 
-                     required 
-                     oninput="formatTitleCase(this)"
-                     placeholder="mf. Muleba" 
-                     class="capitalize w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white rounded-xl px-3.5 py-2 text-xs sm:text-sm focus:outline-none focus:border-blue-600">
+              <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Wilaya ya Mwombaji *</label>
+              <input type="text" id="district" required oninput="formatTitleCase(this)" placeholder="mf. Muleba" class="capitalize w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white rounded-xl px-3.5 py-2 text-xs sm:text-sm focus:outline-none focus:border-blue-600">
             </div>
             <div>
-              <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">7. Ward (Kata) *</label>
-              <input type="text" 
-                     id="ward" 
-                     required 
-                     oninput="formatTitleCase(this)"
-                     placeholder="mf. Muleba Mjini" 
-                     class="capitalize w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white rounded-xl px-3.5 py-2 text-xs sm:text-sm focus:outline-none focus:border-blue-600">
+              <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Kata ya Mwombaji *</label>
+              <input type="text" id="ward" required oninput="formatTitleCase(this)" placeholder="mf. Muleba Mjini" class="capitalize w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white rounded-xl px-3.5 py-2 text-xs sm:text-sm focus:outline-none focus:border-blue-600">
             </div>
             <div>
-              <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">8. Street (Mtaa/Kijiji) *</label>
-              <input type="text" 
-                     id="street" 
-                     required 
-                     oninput="formatTitleCase(this)"
-                     placeholder="mf. Kagondo" 
-                     class="capitalize w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white rounded-xl px-3.5 py-2 text-xs sm:text-sm focus:outline-none focus:border-blue-600">
+              <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Mtaa/Kijiji cha Mwombaji *</label>
+              <input type="text" id="street" required oninput="formatTitleCase(this)" placeholder="mf. Kagondo" class="capitalize w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white rounded-xl px-3.5 py-2 text-xs sm:text-sm focus:outline-none focus:border-blue-600">
             </div>
           </div>
         </div>
@@ -279,15 +308,15 @@
         <!-- ==================== STEP 3: WADHAMINI ==================== -->
         <div id="step3" class="space-y-4 hidden">
           <div>
-            <h2 class="text-base sm:text-lg font-bold text-slate-900 dark:text-white">Wadhamini</h2>
+            <h2 class="text-base sm:text-lg font-bold text-slate-900 dark:text-white">Taarifa za Mdhamini</h2>
             <p class="text-xs text-slate-500 dark:text-slate-400">Mtu wa karibu (Baba, Mama, Mke au Ndugu wa karibu).</p>
           </div>
 
-          <!-- Jina Kamili la Mdhamini (Mama au Mtu wa karibu): Majina Matatu Pekee & HERUFI KUBWA -->
+          <!-- Jina Kamili la Mdhamini -->
           <div>
             <div class="flex items-center justify-between mb-1">
               <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300">Jina Kamili la Mdhamini (Majina Matatu Pekee) *</label>
-              <span class="text-[10px] text-slate-400">HERUFI KUBWA</span>
+              <span class="text-[10px] text-slate-400 font-bold">HERUFI KUBWA</span>
             </div>
             <input type="text" 
                    id="guarantorName" 
@@ -296,72 +325,216 @@
                    placeholder="MF. FATUMA HAMISI BAKARI" 
                    class="uppercase tracking-wide w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white font-semibold rounded-xl px-3.5 py-2.5 text-xs sm:text-sm focus:outline-none focus:border-blue-600 transition">
             <p id="guarantorNameError" class="text-[11px] text-rose-500 mt-1 hidden font-medium">
-              Jina la mdhamini (Baba/Mama/Mke) lazima liwe na MAJINA MATATU TU kwa herufi kubwa.
+              Jina la mdhamini lazima liwe na MAJINA MATATU TU kwa herufi kubwa.
+            </p>
+          </div>
+
+          <!-- NIDA ya Mdhamini -->
+          <div>
+            <div class="flex items-center justify-between mb-1">
+              <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300">Namba ya NIDA ya Mdhamini *</label>
+              <span class="text-[10px] text-slate-400 font-mono">Tarakimu 20</span>
+            </div>
+            <input type="text" 
+                   id="guarantorNida" 
+                   required 
+                   maxlength="23"
+                   oninput="handleNidaInput(this, 'guarantorNidaError')"
+                   placeholder="19XXXXXXXX-XXXXX-XXXXX-XX" 
+                   class="font-mono tracking-wider w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white font-bold rounded-xl px-3.5 py-2.5 text-xs sm:text-sm focus:outline-none focus:border-blue-600 transition">
+            <p id="guarantorNidaError" class="text-[11px] text-rose-500 mt-1 hidden font-medium">
+              Namba ya NIDA ya mdhamini lazima ifuate muundo: 19780914-23124-00001-24.
             </p>
           </div>
 
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-            <div>
-              <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Uhusiano *</label>
-              <select id="guarantorRelation" required class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white rounded-xl px-3 py-2 text-xs sm:text-sm focus:outline-none focus:border-blue-600">
-                <option value="">Chagua Uhusiano</option>
-                <option value="Mama">Mama</option>
-                <option value="Baba">Baba</option>
-                <option value="Mke">Mke</option>
-                <option value="Mume">Mume</option>
-                <option value="Kaka">Kaka</option>
-                <option value="Dada">Dada</option>
-                <option value="Ndugu wa Karibu">Ndugu wa Karibu</option>
-              </select>
+            <!-- ADVANCED STYLE: UHUSIANO WA MDHAMINI -->
+            <div class="relative">
+              <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Uhusiano wa Mdhamini *</label>
+              <input type="hidden" id="guarantorRelationValue" value="">
+
+              <button type="button" 
+                      id="btnSelectRelationTrigger" 
+                      onclick="toggleRelationPicker()" 
+                      class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white rounded-xl px-3.5 py-2.5 text-xs sm:text-sm flex items-center justify-between focus:outline-none focus:border-blue-600 transition">
+                <span id="selectedRelationLabel" class="text-slate-400">Chagua Uhusiano...</span>
+                <i class="fa-solid fa-chevron-down text-slate-400 text-xs transition duration-200" id="relationPickerChevron"></i>
+              </button>
+
+              <!-- Dropdown Panel ya Uhusiano -->
+              <div id="relationPickerDropdown" class="hidden absolute left-0 right-0 mt-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-2xl shadow-2xl p-2 z-30 max-h-60 overflow-y-auto space-y-1">
+                <div onclick="selectRelationOption('Mama', 'fa-person-breastfeeding text-pink-500', 'Mzazi')" class="p-2.5 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center justify-between cursor-pointer transition">
+                  <div class="flex items-center gap-2.5 text-xs font-bold text-slate-800 dark:text-slate-200">
+                    <i class="fa-solid fa-person-breastfeeding text-pink-500 w-4"></i> Mama
+                  </div>
+                  <span class="text-[10px] text-slate-400 font-mono">Mzazi</span>
+                </div>
+                <div onclick="selectRelationOption('Baba', 'fa-person text-blue-500', 'Mzazi')" class="p-2.5 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center justify-between cursor-pointer transition">
+                  <div class="flex items-center gap-2.5 text-xs font-bold text-slate-800 dark:text-slate-200">
+                    <i class="fa-solid fa-person text-blue-500 w-4"></i> Baba
+                  </div>
+                  <span class="text-[10px] text-slate-400 font-mono">Mzazi</span>
+                </div>
+                <div onclick="selectRelationOption('Mke', 'fa-ring text-rose-500', 'Mwenza')" class="p-2.5 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center justify-between cursor-pointer transition">
+                  <div class="flex items-center gap-2.5 text-xs font-bold text-slate-800 dark:text-slate-200">
+                    <i class="fa-solid fa-ring text-rose-500 w-4"></i> Mke
+                  </div>
+                  <span class="text-[10px] text-slate-400 font-mono">Mwenza</span>
+                </div>
+                <div onclick="selectRelationOption('Mume', 'fa-ring text-indigo-500', 'Mwenza')" class="p-2.5 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center justify-between cursor-pointer transition">
+                  <div class="flex items-center gap-2.5 text-xs font-bold text-slate-800 dark:text-slate-200">
+                    <i class="fa-solid fa-ring text-indigo-500 w-4"></i> Mume
+                  </div>
+                  <span class="text-[10px] text-slate-400 font-mono">Mwenza</span>
+                </div>
+                <div onclick="selectRelationOption('Kaka', 'fa-user-group text-teal-500', 'Familia')" class="p-2.5 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center justify-between cursor-pointer transition">
+                  <div class="flex items-center gap-2.5 text-xs font-bold text-slate-800 dark:text-slate-200">
+                    <i class="fa-solid fa-user-group text-teal-500 w-4"></i> Kaka
+                  </div>
+                  <span class="text-[10px] text-slate-400 font-mono">Familia</span>
+                </div>
+                <div onclick="selectRelationOption('Dada', 'fa-user-group text-purple-500', 'Familia')" class="p-2.5 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center justify-between cursor-pointer transition">
+                  <div class="flex items-center gap-2.5 text-xs font-bold text-slate-800 dark:text-slate-200">
+                    <i class="fa-solid fa-user-group text-purple-500 w-4"></i> Dada
+                  </div>
+                  <span class="text-[10px] text-slate-400 font-mono">Familia</span>
+                </div>
+                <div onclick="selectRelationOption('Ndugu wa Karibu', 'fa-people-roof text-amber-500', 'Ukoo')" class="p-2.5 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center justify-between cursor-pointer transition border-t border-slate-100 dark:border-slate-800">
+                  <div class="flex items-center gap-2.5 text-xs font-bold text-slate-800 dark:text-slate-200">
+                    <i class="fa-solid fa-people-roof text-amber-500 w-4"></i> Ndugu wa Karibu
+                  </div>
+                  <span class="text-[10px] text-slate-400 font-mono">Ukoo</span>
+                </div>
+              </div>
             </div>
+
+            <!-- Simu ya Mdhamini -->
             <div>
               <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Simu ya Mdhamini *</label>
               <input type="tel" 
                      id="guarantorPhone" 
                      required 
-                     maxlength="10"
+                     maxlength="10" 
                      oninput="validatePhoneInput(this, 'guarantorPhoneError')"
                      placeholder="07XXXXXXXX au 06XXXXXXXX" 
-                     class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white rounded-xl px-3.5 py-2 text-xs sm:text-sm font-mono focus:outline-none focus:border-blue-600">
-              <p id="guarantorPhoneError" class="text-[11px] text-rose-500 mt-1 hidden font-medium">Namba lazima iwe ya Tanzania yenye tarakimu 10 (06/07).</p>
+                     class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white rounded-xl px-3.5 py-2.5 text-xs sm:text-sm font-mono focus:outline-none focus:border-blue-600">
+              <p id="guarantorPhoneError" class="text-[11px] text-rose-500 mt-1 hidden font-medium">Namba iwe tarakimu 10 (06/07).</p>
             </div>
           </div>
 
-          <!-- Kazi ya Mdhamini: Dropdown List Menu + HERUFI KUBWA Custom Input -->
-          <div>
+          <!-- ADVANCED STYLE: KAZI YA MDHAMINI -->
+          <div class="relative">
             <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Kazi / Shughuli ya Mdhamini *</label>
-            <select id="guarantorJobSelect" required onchange="handleJobChange(this)" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white rounded-xl px-3.5 py-2 text-xs sm:text-sm focus:outline-none focus:border-blue-600">
-              <option value="">-- Chagua Kazi ya Mdhamini --</option>
-              <option value="MKULIMA">MKULIMA</option>
-              <option value="MFANYABIASHARA">MFANYABIASHARA</option>
-              <option value="MWAJIRIWA SERIKALINI">MWAJIRIWA SERIKALINI</option>
-              <option value="MWAJIRIWA SEKTA BINAFSI">MWAJIRIWA SEKTA BINAFSI</option>
-              <option value="DEREVA">DEREVA</option>
-              <option value="FUNDI">FUNDI</option>
-              <option value="MAMA WA NYUMBANI">MAMA WA NYUMBANI</option>
-              <option value="MSTAAFU">MSTAAFU</option>
-              <option value="NYINGINEYO">NYINGINEYO (TAJA HAPA CHINI)...</option>
-            </select>
+            <input type="hidden" id="guarantorJobValue" value="">
 
-            <!-- Custom Job Field (Appears only when "NYINGINEYO" is chosen) -->
+            <button type="button" 
+                    id="btnSelectJobTrigger" 
+                    onclick="toggleJobPicker()" 
+                    class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white rounded-xl px-3.5 py-2.5 text-xs sm:text-sm flex items-center justify-between focus:outline-none focus:border-blue-600 transition">
+              <span id="selectedJobLabel" class="text-slate-400">Gusa hapa kuchagua shughuli/kazi...</span>
+              <i class="fa-solid fa-chevron-down text-slate-400 text-xs transition duration-200" id="jobPickerChevron"></i>
+            </button>
+
+            <!-- Custom Job Dropdown Panel -->
+            <div id="jobPickerDropdown" class="hidden absolute left-0 right-0 mt-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-2xl shadow-2xl p-2 z-30 max-h-60 overflow-y-auto space-y-1">
+              <div onclick="selectJobOption('MKULIMA', 'fa-wheat-awn text-emerald-500')" class="p-2.5 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center justify-between cursor-pointer transition">
+                <div class="flex items-center gap-2.5 text-xs font-bold text-slate-800 dark:text-slate-200">
+                  <i class="fa-solid fa-wheat-awn text-emerald-500 w-4"></i> Mkulima
+                </div>
+                <span class="text-[10px] text-slate-400 font-mono">Kilimo</span>
+              </div>
+              <div onclick="selectJobOption('MFANYABIASHARA', 'fa-store text-blue-500')" class="p-2.5 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center justify-between cursor-pointer transition">
+                <div class="flex items-center gap-2.5 text-xs font-bold text-slate-800 dark:text-slate-200">
+                  <i class="fa-solid fa-store text-blue-500 w-4"></i> Mfanyabiashara
+                </div>
+                <span class="text-[10px] text-slate-400 font-mono">Biashara</span>
+              </div>
+              <div onclick="selectJobOption('MWAJIRIWA SERIKALINI', 'fa-building-columns text-purple-500')" class="p-2.5 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center justify-between cursor-pointer transition">
+                <div class="flex items-center gap-2.5 text-xs font-bold text-slate-800 dark:text-slate-200">
+                  <i class="fa-solid fa-building-columns text-purple-500 w-4"></i> Mwajiriwa Serikalini
+                </div>
+                <span class="text-[10px] text-slate-400 font-mono">Umma</span>
+              </div>
+              <div onclick="selectJobOption('MWAJIRIWA SEKTA BINAFSI', 'fa-briefcase text-amber-500')" class="p-2.5 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center justify-between cursor-pointer transition">
+                <div class="flex items-center gap-2.5 text-xs font-bold text-slate-800 dark:text-slate-200">
+                  <i class="fa-solid fa-briefcase text-amber-500 w-4"></i> Mwajiriwa Sekta Binafsi
+                </div>
+                <span class="text-[10px] text-slate-400 font-mono">Kampuni</span>
+              </div>
+              <div onclick="selectJobOption('DEREVA', 'fa-truck-fast text-cyan-500')" class="p-2.5 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center justify-between cursor-pointer transition">
+                <div class="flex items-center gap-2.5 text-xs font-bold text-slate-800 dark:text-slate-200">
+                  <i class="fa-solid fa-truck-fast text-cyan-500 w-4"></i> Dereva
+                </div>
+                <span class="text-[10px] text-slate-400 font-mono">Usafirishaji</span>
+              </div>
+              <div onclick="selectJobOption('FUNDI', 'fa-wrench text-orange-500')" class="p-2.5 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center justify-between cursor-pointer transition">
+                <div class="flex items-center gap-2.5 text-xs font-bold text-slate-800 dark:text-slate-200">
+                  <i class="fa-solid fa-wrench text-orange-500 w-4"></i> Fundi
+                </div>
+                <span class="text-[10px] text-slate-400 font-mono">Ufundi</span>
+              </div>
+              <div onclick="selectJobOption('MAMA WA NYUMBANI', 'fa-house-user text-pink-500')" class="p-2.5 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center justify-between cursor-pointer transition">
+                <div class="flex items-center gap-2.5 text-xs font-bold text-slate-800 dark:text-slate-200">
+                  <i class="fa-solid fa-house-user text-pink-500 w-4"></i> Mama wa Nyumbani
+                </div>
+                <span class="text-[10px] text-slate-400 font-mono">Familia</span>
+              </div>
+              <div onclick="selectJobOption('MSTAAFU', 'fa-user-clock text-slate-400')" class="p-2.5 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center justify-between cursor-pointer transition">
+                <div class="flex items-center gap-2.5 text-xs font-bold text-slate-800 dark:text-slate-200">
+                  <i class="fa-solid fa-user-clock text-slate-400 w-4"></i> Mstaafu
+                </div>
+                <span class="text-[10px] text-slate-400 font-mono">Pensheni</span>
+              </div>
+              <div onclick="selectJobOption('NYINGINEYO', 'fa-pen-clip text-indigo-500')" class="p-2.5 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center justify-between cursor-pointer transition border-t border-slate-100 dark:border-slate-800">
+                <div class="flex items-center gap-2.5 text-xs font-bold text-indigo-500">
+                  <i class="fa-solid fa-pen-clip w-4"></i> Nyinginezo (Andika mwenyewe)...
+                </div>
+                <i class="fa-solid fa-arrow-right text-[10px] text-indigo-400"></i>
+              </div>
+            </div>
+
+            <!-- Custom Job Field -->
             <div id="customJobContainer" class="hidden mt-2">
               <input type="text" 
                      id="guarantorJobCustom" 
-                     uppercase
                      oninput="this.value = this.value.toUpperCase()" 
                      placeholder="TAJA KAZI YAKE HAPA KWA HERUFI KUBWA" 
                      class="uppercase w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white font-semibold rounded-xl px-3.5 py-2 text-xs sm:text-sm focus:outline-none focus:border-blue-600">
             </div>
           </div>
+
+          <!-- Makazi ya Mdhamini -->
+          <div class="pt-2 border-t border-slate-100 dark:border-slate-800">
+            <span class="block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-2">Mahali Anapoishi Mdhamini:</span>
+            <div class="grid grid-cols-2 gap-2.5">
+              <div>
+                <label class="block text-[11px] font-semibold text-slate-700 dark:text-slate-300 mb-1">Mkoa wa Mdhamini *</label>
+                <input type="text" id="guarantorRegion" required oninput="formatTitleCase(this)" placeholder="mf. Kagera" class="capitalize w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white rounded-xl px-3 py-2 text-xs sm:text-sm focus:outline-none focus:border-blue-600">
+              </div>
+              <div>
+                <label class="block text-[11px] font-semibold text-slate-700 dark:text-slate-300 mb-1">Wilaya ya Mdhamini *</label>
+                <input type="text" id="guarantorDistrict" required oninput="formatTitleCase(this)" placeholder="mf. Muleba" class="capitalize w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white rounded-xl px-3 py-2 text-xs sm:text-sm focus:outline-none focus:border-blue-600">
+              </div>
+              <div>
+                <label class="block text-[11px] font-semibold text-slate-700 dark:text-slate-300 mb-1">Kata ya Mdhamini *</label>
+                <input type="text" id="guarantorWard" required oninput="formatTitleCase(this)" placeholder="mf. Muleba Mjini" class="capitalize w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white rounded-xl px-3 py-2 text-xs sm:text-sm focus:outline-none focus:border-blue-600">
+              </div>
+              <div>
+                <label class="block text-[11px] font-semibold text-slate-700 dark:text-slate-300 mb-1">Mtaa/Kijiji cha Mdhamini *</label>
+                <input type="text" id="guarantorStreet" required oninput="formatTitleCase(this)" placeholder="mf. Bulyakashaju" class="capitalize w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white rounded-xl px-3 py-2 text-xs sm:text-sm focus:outline-none focus:border-blue-600">
+              </div>
+            </div>
+          </div>
         </div>
 
-        <!-- ==================== STEP 4: VIAMBATANISHO ==================== -->
+        <!-- ==================== STEP 4: VIAMBATANISHO & UHAKIKI (REVIEW) ==================== -->
         <div id="step4" class="space-y-4 hidden">
           <div>
-            <h2 class="text-base sm:text-lg font-bold text-slate-900 dark:text-white">Viambatanisho</h2>
-            <p class="text-xs text-slate-500 dark:text-slate-400">Pakia picha au faili za PDF (kila moja chini ya 5MB).</p>
+            <h2 class="text-base sm:text-lg font-bold text-slate-900 dark:text-white">Hatua ya 4: Viambatanisho & Uhakiki</h2>
+            <p class="text-xs text-slate-500 dark:text-slate-400">Pakia nyaraka na uhakiki taarifa zako kabla ya kuwasilisha.</p>
           </div>
 
+          <!-- Uploads -->
           <div class="space-y-3">
             <div class="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/80">
               <label class="block text-xs font-bold text-slate-800 dark:text-white mb-1">1. NIDA ya Mdhamini *</label>
@@ -380,6 +553,53 @@
               <input type="file" id="fileLicense" accept=".pdf,image/png,image/jpeg" required onchange="handleFileChange(event, 'previewLicense')" class="w-full text-xs text-slate-500 file:mr-2 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-blue-600 file:text-white cursor-pointer">
               <p id="previewLicense" class="text-[11px] text-emerald-600 dark:text-emerald-400 mt-1 hidden"></p>
             </div>
+          </div>
+
+          <!-- SUMMARY REVIEW CARD KABLA YA KUTUMA -->
+          <div class="mt-4 p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-800 space-y-2.5">
+            <div class="flex items-center justify-between border-b border-slate-200 dark:border-slate-700 pb-2">
+              <span class="text-xs font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
+                <i class="fa-solid fa-clipboard-check text-blue-500"></i> Muhtasari wa Maombi Yako
+              </span>
+              <span class="text-[10px] font-mono font-bold bg-blue-500/10 text-blue-500 px-2 py-0.5 rounded-md" id="reviewBizBadge">-</span>
+            </div>
+            
+            <div class="grid grid-cols-2 gap-2 text-[11px]">
+              <div>
+                <span class="text-slate-400 block">Mwombaji:</span>
+                <strong class="text-slate-800 dark:text-slate-200" id="reviewName">-</strong>
+              </div>
+              <div>
+                <span class="text-slate-400 block">Simu ya Kwanza:</span>
+                <strong class="text-slate-800 dark:text-slate-200 font-mono" id="reviewPhone">-</strong>
+              </div>
+              <div>
+                <span class="text-slate-400 block">NIDA ya Mwombaji:</span>
+                <strong class="text-slate-800 dark:text-slate-200 font-mono text-[10px]" id="reviewNida">-</strong>
+              </div>
+              <div>
+                <span class="text-slate-400 block">Chombo Ulichoomba:</span>
+                <strong class="text-amber-500 font-mono" id="reviewPlate">-</strong>
+              </div>
+              <div>
+                <span class="text-slate-400 block">Mdhamini & Uhusiano:</span>
+                <strong class="text-slate-800 dark:text-slate-200" id="reviewGuarantor">-</strong>
+              </div>
+              <div>
+                <span class="text-slate-400 block">Kazi ya Mdhamini:</span>
+                <strong class="text-slate-800 dark:text-slate-200" id="reviewGuarantorJob">-</strong>
+              </div>
+            </div>
+          </div>
+
+          <!-- MANDATORY CONFIRMATION CHECKBOX -->
+          <div class="pt-2">
+            <label class="flex items-start gap-3 p-3.5 rounded-2xl bg-amber-500/10 border border-amber-500/30 cursor-pointer select-none transition">
+              <input type="checkbox" id="confirmCheckbox" onchange="toggleSubmitReady()" class="w-4 h-4 mt-0.5 rounded text-blue-600 focus:ring-blue-500 border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800">
+              <span class="text-xs text-amber-600 dark:text-amber-300 leading-relaxed font-medium">
+                Ninathibitisha kuwa nimepitia taarifa zote nilizojaza na ni za kweli. Nakubali kuwa taarifa zisizo sahihi zitasababisha ombi langu kufutwa mara moja.
+              </span>
+            </label>
           </div>
         </div>
 
@@ -424,7 +644,58 @@
       initTheme();
       fetchFleetFromSheet();
       updateNavButtons();
+
+      // Close custom dropdowns when clicking outside
+      document.addEventListener('click', (e) => {
+        // Job Picker
+        const jobTrigger = document.getElementById('btnSelectJobTrigger');
+        const jobDropdown = document.getElementById('jobPickerDropdown');
+        if (jobTrigger && jobDropdown && !jobTrigger.contains(e.target) && !jobDropdown.contains(e.target)) {
+          jobDropdown.classList.add('hidden');
+          document.getElementById('jobPickerChevron').classList.remove('rotate-180');
+        }
+
+        // Relation Picker
+        const relTrigger = document.getElementById('btnSelectRelationTrigger');
+        const relDropdown = document.getElementById('relationPickerDropdown');
+        if (relTrigger && relDropdown && !relTrigger.contains(e.target) && !relDropdown.contains(e.target)) {
+          relDropdown.classList.add('hidden');
+          document.getElementById('relationPickerChevron').classList.remove('rotate-180');
+        }
+      });
     });
+
+    // Toast
+    function showToast(message, type = "success", title = "") {
+      const toast = document.getElementById("toastNotification");
+      const iconWrap = document.getElementById("toastIconWrap");
+      const icon = document.getElementById("toastIcon");
+      const titleEl = document.getElementById("toastTitle");
+      const msgEl = document.getElementById("toastMessage");
+
+      if (type === "success") {
+        titleEl.innerText = title || "Imekamilika";
+        iconWrap.className = "w-9 h-9 rounded-xl flex items-center justify-center text-sm shrink-0 bg-emerald-500/10 text-emerald-500";
+        icon.className = "fa-solid fa-circle-check";
+      } else if (type === "warning") {
+        titleEl.innerText = title || "Angalizo";
+        iconWrap.className = "w-9 h-9 rounded-xl flex items-center justify-center text-sm shrink-0 bg-amber-500/10 text-amber-500";
+        icon.className = "fa-solid fa-triangle-exclamation";
+      } else if (type === "error") {
+        titleEl.innerText = title || "Hitilafu";
+        iconWrap.className = "w-9 h-9 rounded-xl flex items-center justify-center text-sm shrink-0 bg-rose-500/10 text-rose-500";
+        icon.className = "fa-solid fa-circle-xmark";
+      }
+
+      msgEl.innerText = message;
+      toast.classList.remove("-translate-y-20", "opacity-0", "pointer-events-none");
+      toast.classList.add("translate-y-0", "opacity-100");
+
+      setTimeout(() => {
+        toast.classList.remove("translate-y-0", "opacity-100");
+        toast.classList.add("-translate-y-20", "opacity-0", "pointer-events-none");
+      }, 3500);
+    }
 
     // Theme Switcher
     function initTheme() {
@@ -450,11 +721,102 @@
       }
     }
 
-    // ==========================================
-    // FORMATTING & VALIDATION RULES
-    // ==========================================
+    // ADVANCED PICKER: Jinsia
+    function selectSex(val) {
+      document.getElementById('sex').value = val;
+      const btnMe = document.getElementById('btnSexMe');
+      const btnKe = document.getElementById('btnSexKe');
 
-    // 1. Auto-uppercase & Strict 3 Names Check
+      if (val === 'Me') {
+        btnMe.className = "py-1.5 rounded-lg text-xs font-black shadow bg-white dark:bg-slate-700 text-blue-600 dark:text-blue-400 flex items-center justify-center gap-1.5 transition";
+        btnKe.className = "py-1.5 rounded-lg text-xs font-bold text-slate-500 dark:text-slate-400 flex items-center justify-center gap-1.5 transition";
+      } else {
+        btnKe.className = "py-1.5 rounded-lg text-xs font-black shadow bg-white dark:bg-slate-700 text-rose-600 dark:text-rose-400 flex items-center justify-center gap-1.5 transition";
+        btnMe.className = "py-1.5 rounded-lg text-xs font-bold text-slate-500 dark:text-slate-400 flex items-center justify-center gap-1.5 transition";
+      }
+    }
+
+    // ADVANCED PICKER: Uhusiano wa Mdhamini
+    function toggleRelationPicker() {
+      const dropdown = document.getElementById('relationPickerDropdown');
+      const chevron = document.getElementById('relationPickerChevron');
+      dropdown.classList.toggle('hidden');
+      chevron.classList.toggle('rotate-180');
+    }
+
+    function selectRelationOption(val, iconClass, groupBadge) {
+      document.getElementById('guarantorRelationValue').value = val;
+      const label = document.getElementById('selectedRelationLabel');
+      label.innerHTML = `
+        <span class="text-slate-900 dark:text-white font-bold flex items-center gap-2">
+          <i class="fa-solid ${iconClass}"></i> ${val}
+          <span class="text-[9px] font-mono font-semibold px-1.5 py-0.2 bg-slate-200 dark:bg-slate-700 text-slate-500 dark:text-slate-300 rounded">${groupBadge}</span>
+        </span>
+      `;
+      toggleRelationPicker();
+    }
+
+    // ADVANCED PICKER: Kazi ya Mdhamini
+    function toggleJobPicker() {
+      const dropdown = document.getElementById('jobPickerDropdown');
+      const chevron = document.getElementById('jobPickerChevron');
+      dropdown.classList.toggle('hidden');
+      chevron.classList.toggle('rotate-180');
+    }
+
+    function selectJobOption(val, iconClass) {
+      document.getElementById('guarantorJobValue').value = val;
+      const label = document.getElementById('selectedJobLabel');
+      const customBox = document.getElementById('customJobContainer');
+      const customInput = document.getElementById('guarantorJobCustom');
+
+      if (val === 'NYINGINEYO') {
+        label.innerHTML = `<span class="text-indigo-500 font-bold"><i class="fa-solid fa-pen-clip mr-1.5"></i> Nyinginezo (Taja Hapa Chini)</span>`;
+        customBox.classList.remove('hidden');
+        customInput.setAttribute('required', 'required');
+        customInput.focus();
+      } else {
+        label.innerHTML = `<span class="text-slate-900 dark:text-white font-bold"><i class="fa-solid ${iconClass} mr-1.5"></i> ${val}</span>`;
+        customBox.classList.add('hidden');
+        customInput.removeAttribute('required');
+        customInput.value = '';
+      }
+      toggleJobPicker();
+    }
+
+    // NIDA Formatter (8-5-5-2)
+    function handleNidaInput(input, errorId) {
+      let raw = input.value.replace(/[^0-9]/g, '');
+      if (raw.length > 20) raw = raw.substring(0, 20);
+
+      let formatted = '';
+      if (raw.length > 0) {
+        formatted = raw.substring(0, 8);
+        if (raw.length > 8) formatted += '-' + raw.substring(8, 13);
+        if (raw.length > 13) formatted += '-' + raw.substring(13, 18);
+        if (raw.length > 18) formatted += '-' + raw.substring(18, 20);
+      }
+      input.value = formatted;
+      validateNida(input.value, errorId);
+    }
+
+    function validateNida(nidaVal, errorId) {
+      const errEl = document.getElementById(errorId);
+      const regexNIDA = /^[0-9]{8}-[0-9]{5}-[0-9]{5}-[0-9]{2}$/;
+      if (nidaVal.trim() === '') {
+        errEl.classList.add('hidden');
+        return false;
+      }
+      if (!regexNIDA.test(nidaVal)) {
+        errEl.classList.remove('hidden');
+        return false;
+      } else {
+        errEl.classList.add('hidden');
+        return true;
+      }
+    }
+
+    // Name formatting
     function handleNameInput(input, errorId) {
       input.value = input.value.toUpperCase();
       validateThreeNames(input.value, errorId);
@@ -468,8 +830,7 @@
         return false;
       }
       const parts = trimmed.split(' ');
-      const isValid = (parts.length === 3 && parts.every(part => part.length >= 2));
-      
+      const isValid = (parts.length === 3 && parts.every(p => p.length >= 2));
       if (!isValid) {
         errEl.classList.remove('hidden');
         return false;
@@ -479,7 +840,7 @@
       }
     }
 
-    // 2. Title Case Formatting (Herufi ya kwanza kubwa kwa kila neno)
+    // Title Case
     function formatTitleCase(input) {
       const cursorPos = input.selectionStart;
       const original = input.value;
@@ -489,22 +850,7 @@
       input.setSelectionRange(cursorPos, cursorPos);
     }
 
-    // 3. Dropdown ya Kazi ya Mdhamini
-    function handleJobChange(select) {
-      const customContainer = document.getElementById("customJobContainer");
-      const customInput = document.getElementById("guarantorJobCustom");
-      if (select.value === "NYINGINEYO") {
-        customContainer.classList.remove("hidden");
-        customInput.setAttribute("required", "required");
-        customInput.focus();
-      } else {
-        customContainer.classList.add("hidden");
-        customInput.removeAttribute("required");
-        customInput.value = "";
-      }
-    }
-
-    // 4. Tanzania Phone Validation
+    // Tanzania Phone Validation
     function validatePhone(phone) {
       const regexTZ = /^(0[67][0-9]{8})$/;
       return regexTZ.test(phone.trim());
@@ -513,12 +859,10 @@
     function validatePhoneInput(input, errorId, isOptional = false) {
       input.value = input.value.replace(/[^0-9]/g, '');
       const errEl = document.getElementById(errorId);
-      
       if (isOptional && input.value.trim() === '') {
         errEl.classList.add('hidden');
         return true;
       }
-
       if (!validatePhone(input.value)) {
         errEl.classList.remove('hidden');
         return false;
@@ -543,87 +887,147 @@
       }
     }
 
+    // Populate Review Data kabla ya kutuma
+    function populateReviewData() {
+      const bizType = document.querySelector('input[name="businessType"]:checked').value;
+      const jobVal = document.getElementById("guarantorJobValue").value;
+      const finalJob = jobVal === "NYINGINEYO" ? document.getElementById("guarantorJobCustom").value.trim() : jobVal;
+      const relVal = document.getElementById("guarantorRelationValue").value || "-";
+
+      document.getElementById("reviewBizBadge").innerText = bizType;
+      document.getElementById("reviewName").innerText = document.getElementById("fullName").value || "-";
+      document.getElementById("reviewPhone").innerText = document.getElementById("phonePrimary").value || "-";
+      document.getElementById("reviewNida").innerText = document.getElementById("applicantNida").value || "-";
+      document.getElementById("reviewPlate").innerText = document.getElementById("selectedPlate").value || "HAKUNA";
+      document.getElementById("reviewGuarantor").innerText = (document.getElementById("guarantorName").value || "-") + " (" + relVal + ")";
+      document.getElementById("reviewGuarantorJob").innerText = finalJob || "-";
+    }
+
+    // Checkbox Ready State
+    function toggleSubmitReady() {
+      const isChecked = document.getElementById("confirmCheckbox").checked;
+      const btnNext = document.getElementById("btnAppNext");
+      if (currentStep === 4) {
+        if (isChecked) {
+          btnNext.disabled = false;
+          btnNext.className = "flex-1 py-3.5 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-extrabold shadow-lg shadow-emerald-600/25 active:scale-95 transition flex items-center justify-center gap-2 cursor-pointer";
+        } else {
+          btnNext.disabled = true;
+          btnNext.className = "flex-1 py-3.5 rounded-2xl bg-slate-300 dark:bg-slate-800 text-slate-400 dark:text-slate-600 text-xs font-bold cursor-not-allowed transition flex items-center justify-center gap-2";
+        }
+      }
+    }
+
     // Stepper Navigation
     function goToStep(step) {
       const businessType = document.querySelector('input[name="businessType"]:checked').value;
       
-      // Step 1 Check
+      // Step 1
       if (currentStep === 1 && step > 1) {
         if (businessType !== "Huduma za Kifedha" && !document.getElementById("selectedPlate").value) {
-          alert("Tafadhali chagua pikipiki au bajaji moja kwenye orodha kabla ya kuendelea.");
+          showToast("Tafadhali chagua pikipiki au bajaji moja kwenye orodha kabla ya kuendelea.", "warning");
           return;
         }
       }
 
-      // Step 2 Check: Mwombaji
+      // Step 2: Mwombaji
       if (currentStep === 2 && step > 2) {
         const nameVal = document.getElementById("fullName").value;
         if (!validateThreeNames(nameVal, 'nameError')) {
-          alert("Jina Kamili la Mwombaji lazima liwe na MAJINA MATATU TU kwa HERUFI KUBWA!");
+          showToast("Jina la Mwombaji lazima liwe na MAJINA MATATU TU kwa HERUFI KUBWA!", "error");
           document.getElementById("fullName").focus();
+          return;
+        }
+
+        const appNida = document.getElementById("applicantNida").value;
+        if (!validateNida(appNida, 'applicantNidaError')) {
+          showToast("Namba ya NIDA lazima ifuate muundo: 19780914-23124-00001-24 (Tarakimu 20).", "error");
+          document.getElementById("applicantNida").focus();
           return;
         }
 
         const phone1 = document.getElementById("phonePrimary").value;
         if (!validatePhone(phone1)) {
-          alert("Namba ya simu ya kwanza si sahihi! Lazima iwe tarakimu 10 na ianze na 06 au 07.");
+          showToast("Namba ya simu ya kwanza si sahihi! Lazima ianze na 06 au 07 na iwe tarakimu 10.", "error");
           document.getElementById("phonePrimary").focus();
           return;
         }
 
         const phone2 = document.getElementById("phoneSecondary").value.trim();
         if (phone2 !== "" && !validatePhone(phone2)) {
-          alert("Namba ya simu ya pili si sahihi! Lazima ianze na 06 au 07 na iwe na tarakimu 10.");
+          showToast("Namba ya simu ya pili si sahihi! Lazima ianze na 06 au 07 na iwe tarakimu 10.", "error");
           document.getElementById("phoneSecondary").focus();
           return;
         }
 
-        const reqFields = ["dob", "sex", "region", "district", "ward", "street"];
+        if (!document.getElementById("sex").value) {
+          showToast("Tafadhali chagua Jinsia (Me au Ke).", "warning");
+          return;
+        }
+
+        const reqFields = ["dob", "region", "district", "ward", "street"];
         for (let id of reqFields) {
           if (!document.getElementById(id).value.trim()) {
-            alert("Tafadhali jaza sehemu zote za makazi na taarifa binafsi.");
+            showToast("Tafadhali kamilisha nafasi zote za makazi na taarifa binafsi.", "warning");
             document.getElementById(id).focus();
             return;
           }
         }
       }
 
-      // Step 3 Check: Mdhamini (Mama/Baba/Mke)
+      // Step 3: Mdhamini
       if (currentStep === 3 && step > 3) {
         const gName = document.getElementById("guarantorName").value;
         if (!validateThreeNames(gName, 'guarantorNameError')) {
-          alert("Jina la Mdhamini (Mama/Baba/Mke) lazima liwe na MAJINA MATATU TU kwa HERUFI KUBWA!");
+          showToast("Jina la Mdhamini lazima liwe na MAJINA MATATU TU kwa HERUFI KUBWA!", "error");
           document.getElementById("guarantorName").focus();
           return;
         }
 
-        const gRel = document.getElementById("guarantorRelation").value;
+        const gNida = document.getElementById("guarantorNida").value;
+        if (!validateNida(gNida, 'guarantorNidaError')) {
+          showToast("NIDA ya Mdhamini si sahihi! Lazima iwe tarakimu 20 zenye viunganishi 3.", "error");
+          document.getElementById("guarantorNida").focus();
+          return;
+        }
+
+        const gRel = document.getElementById("guarantorRelationValue").value;
         const gPhone = document.getElementById("guarantorPhone").value;
-        const gJobSelect = document.getElementById("guarantorJobSelect").value;
+        const gJobVal = document.getElementById("guarantorJobValue").value;
         const gJobCustom = document.getElementById("guarantorJobCustom").value.trim();
 
         if (!gRel) {
-          alert("Tafadhali chagua uhusiano wa mdhamini.");
+          showToast("Tafadhali chagua uhusiano wa mdhamini kwenye menyu.", "warning");
           return;
         }
 
         if (!validatePhone(gPhone)) {
-          alert("Namba ya simu ya mdhamini si sahihi! Lazima ianze na 06 au 07 na iwe tarakimu 10.");
+          showToast("Simu ya mdhamini si sahihi! Lazima iwe tarakimu 10 na ianze na 06/07.", "error");
           document.getElementById("guarantorPhone").focus();
           return;
         }
 
-        if (!gJobSelect) {
-          alert("Tafadhali chagua kazi ya mdhamini kwenye orodha.");
-          document.getElementById("guarantorJobSelect").focus();
+        if (!gJobVal) {
+          showToast("Tafadhali chagua kazi ya mdhamini kwenye menyu.", "warning");
           return;
         }
 
-        if (gJobSelect === "NYINGINEYO" && !gJobCustom) {
-          alert("Tafadhali andika kazi ya mdhamini kwa herufi kubwa.");
+        if (gJobVal === "NYINGINEYO" && !gJobCustom) {
+          showToast("Tafadhali andika kazi ya mdhamini kwa herufi kubwa.", "warning");
           document.getElementById("guarantorJobCustom").focus();
           return;
         }
+
+        const gReqFields = ["guarantorRegion", "guarantorDistrict", "guarantorWard", "guarantorStreet"];
+        for (let id of gReqFields) {
+          if (!document.getElementById(id).value.trim()) {
+            showToast("Tafadhali jaza nafasi zote za makazi ya mdhamini.", "warning");
+            document.getElementById(id).focus();
+            return;
+          }
+        }
+
+        populateReviewData();
       }
 
       for (let i = 1; i <= 4; i++) {
@@ -656,6 +1060,11 @@
       if (currentStep < 4) {
         goToStep(currentStep + 1);
       } else {
+        const isConfirmed = document.getElementById("confirmCheckbox").checked;
+        if (!isConfirmed) {
+          showToast("Tafadhali weka alama ya tiki kwenye kisanduku cha uthibitisho kabla ya kuwasilisha.", "warning");
+          return;
+        }
         document.getElementById("hrApplicationForm").requestSubmit();
       }
     }
@@ -672,10 +1081,11 @@
 
       if (currentStep === 4) {
         btnNext.innerHTML = `<span>Wasilisha Ombi Lako</span> <i class="fa-solid fa-paper-plane text-[10px]"></i>`;
-        btnNext.className = "flex-1 py-3.5 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-extrabold shadow-lg shadow-emerald-600/25 active:scale-95 transition flex items-center justify-center gap-2";
+        toggleSubmitReady();
       } else {
+        btnNext.disabled = false;
         btnNext.innerHTML = `<span>Endelea</span> <i class="fa-solid fa-arrow-right text-[10px]"></i>`;
-        btnNext.className = "flex-1 py-3.5 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-extrabold shadow-lg shadow-blue-600/25 active:scale-95 transition flex items-center justify-center gap-2";
+        btnNext.className = "flex-1 py-3.5 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-extrabold shadow-lg shadow-blue-600/25 active:scale-95 transition flex items-center justify-center gap-2 cursor-pointer";
       }
     }
 
@@ -808,11 +1218,10 @@
           fileToBase64(fileLicense)
         ]);
 
-        // Pata kazi ya mdhamini (Kutoka Dropdown au Custom)
-        const jobSelectVal = document.getElementById("guarantorJobSelect").value;
-        const finalJob = jobSelectVal === "NYINGINEYO" 
+        const jobVal = document.getElementById("guarantorJobValue").value;
+        const finalJob = jobVal === "NYINGINEYO" 
           ? document.getElementById("guarantorJobCustom").value.toUpperCase().trim() 
-          : jobSelectVal;
+          : jobVal;
 
         const payload = {
           action: "registerApplicant",
@@ -821,6 +1230,7 @@
           vehicleModel: document.getElementById("selectedModel").value || "N/A",
           vehicleColor: document.getElementById("selectedColor").value || "N/A",
           fullName: document.getElementById("fullName").value.trim().replace(/\s+/g, ' '),
+          applicantNida: document.getElementById("applicantNida").value.trim(),
           phonePrimary: document.getElementById("phonePrimary").value.trim(),
           phoneSecondary: document.getElementById("phoneSecondary").value.trim() || "N/A",
           age: document.getElementById("age").value,
@@ -831,9 +1241,14 @@
           ward: document.getElementById("ward").value.trim(),
           street: document.getElementById("street").value.trim(),
           guarantorName: document.getElementById("guarantorName").value.trim().replace(/\s+/g, ' '),
-          guarantorRelation: document.getElementById("guarantorRelation").value,
+          guarantorNida: document.getElementById("guarantorNida").value.trim(),
+          guarantorRelation: document.getElementById("guarantorRelationValue").value,
           guarantorPhone: document.getElementById("guarantorPhone").value.trim(),
           guarantorJob: finalJob,
+          guarantorRegion: document.getElementById("guarantorRegion").value.trim(),
+          guarantorDistrict: document.getElementById("guarantorDistrict").value.trim(),
+          guarantorWard: document.getElementById("guarantorWard").value.trim(),
+          guarantorStreet: document.getElementById("guarantorStreet").value.trim(),
           files: {
             nidaGuarantor: base64Guarantor,
             nidaApplicant: base64Applicant,
